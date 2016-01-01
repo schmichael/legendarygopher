@@ -20,6 +20,7 @@ type DFWorld struct {
 	Regions            []*Region            `xml:"regions>region"`
 	UndergroundRegions []*UndergroundRegion `xml:"underground_regions>underground_region"`
 	Sites              []*Site              `xml:"sites>site"`
+	Artifacts          []*Artifact          `xml:"artifacts>artifact"`
 }
 
 func (w *DFWorld) String() string {
@@ -33,6 +34,9 @@ func (w *DFWorld) String() string {
 	}
 	for _, s := range w.Sites {
 		fmt.Fprintf(buf, "%-5d %-14s %-40s %-7s\n", s.ID, s.Type, s.Name, s.Coords)
+	}
+	for _, a := range w.Artifacts {
+		fmt.Fprintf(buf, "%-5d %-40s %-30s\n", a.ID, a.Name, a.Item)
 	}
 	return buf.String()
 }
@@ -55,4 +59,10 @@ type Site struct {
 	Name   string `xml:"name"`
 	Coords string `xml:"coords"`
 	//Structures []*Structure `xml:"structures // unused?!
+}
+
+type Artifact struct {
+	ID   int    `xml:"id"`
+	Name string `xml:"name"`
+	Item string `xml:"item"`
 }
