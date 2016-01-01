@@ -23,6 +23,12 @@ type DFWorld struct {
 	Sites              []*Site              `xml:"sites>site"`
 	Artifacts          []*Artifact          `xml:"artifacts>artifact"`
 	Figures            []*Figure            `xml:"historical_figures>historical_figure"`
+
+	// useless?
+	EntityPopulations []*EntityPopulation `xml:"entity_populations>entity_population"`
+
+	Entities []*Entity `xml:"entities>entity"`
+	Events   []*Event  `xml:"historical_events>historical_event"`
 }
 
 func (w *DFWorld) String() string {
@@ -43,6 +49,7 @@ func (w *DFWorld) String() string {
 	for _, f := range w.Figures {
 		fmt.Fprintf(buf, "%-5d %-40s entities:%d sites:%d spheres:%s\n", f.ID, f.Name, len(f.Entities), len(f.Sites), strings.Join(f.Spheres, ","))
 	}
+	fmt.Fprintf(buf, "Events: %d\n", len(w.Events))
 	return buf.String()
 }
 
@@ -96,4 +103,26 @@ type SiteLink struct {
 	// Type may be "lair" ...
 	Type string `xml:"link_type"`
 	ID   int    `xml:"site_id"`
+}
+
+// EntityPopulation -- empty?!
+type EntityPopulation struct {
+	ID int `xml:"id"`
+}
+
+type Entity struct {
+	ID   int    `xml:"id"`
+	Name string `xml:"string"`
+}
+
+type Event struct {
+	ID             int    `xml:"id"`
+	Year           int    `xml:"year"`
+	Type           string `xml:"type"`
+	FigureID       int    `xml:"hfid"`
+	State          string `xml:"state"` // settled,wandering
+	SiteID         int    `xml:"site_id"`
+	SubregionID    int    `xml:"subregion_id"`
+	FeatureLayerID int    `xml:"feater_layer_id"`
+	Coords         string `xml:"coords"`
 }
