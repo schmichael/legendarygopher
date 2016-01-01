@@ -21,6 +21,7 @@ type DFWorld struct {
 	UndergroundRegions []*UndergroundRegion `xml:"underground_regions>underground_region"`
 	Sites              []*Site              `xml:"sites>site"`
 	Artifacts          []*Artifact          `xml:"artifacts>artifact"`
+	Figures            []*Figure            `xml:"historical_figures>historical_figure"`
 }
 
 func (w *DFWorld) String() string {
@@ -37,6 +38,9 @@ func (w *DFWorld) String() string {
 	}
 	for _, a := range w.Artifacts {
 		fmt.Fprintf(buf, "%-5d %-40s %-30s\n", a.ID, a.Name, a.Item)
+	}
+	for _, f := range w.Figures {
+		fmt.Fprintf(buf, "%-5d %-40s %-5d\n", f.ID, f.Name, len(f.Entities))
 	}
 	return buf.String()
 }
@@ -65,4 +69,20 @@ type Artifact struct {
 	ID   int    `xml:"id"`
 	Name string `xml:"name"`
 	Item string `xml:"item"`
+}
+
+type Figure struct {
+	ID         int           `xml:"id"`
+	Name       string        `xml:"name"`
+	Race       string        `xml:"race"`
+	Appeared   int           `xml:"appeared"`
+	BirthYear  int           `xml:"birth_year"`
+	DeathYear  int           `xml:"death_year"`
+	AssocTypes string        `xml:"associated_types"`
+	Entities   []*EntityLink `xml:"entity_link"`
+}
+
+type EntityLink struct {
+	Type string `xml:"link_type"`
+	ID   int    `xml:"entity_id"`
 }
