@@ -5,6 +5,7 @@ import (
 	"encoding/xml"
 	"fmt"
 	"io"
+	"strings"
 )
 
 func New(r io.Reader) (*DFWorld, error) {
@@ -40,7 +41,7 @@ func (w *DFWorld) String() string {
 		fmt.Fprintf(buf, "%-5d %-40s %-30s\n", a.ID, a.Name, a.Item)
 	}
 	for _, f := range w.Figures {
-		fmt.Fprintf(buf, "%-5d %-40s %-5d\n", f.ID, f.Name, len(f.Entities))
+		fmt.Fprintf(buf, "%-5d %-40s entities:%d sites:%d spheres:%s\n", f.ID, f.Name, len(f.Entities), len(f.Sites), strings.Join(f.Spheres, ","))
 	}
 	return buf.String()
 }
@@ -75,14 +76,24 @@ type Figure struct {
 	ID         int           `xml:"id"`
 	Name       string        `xml:"name"`
 	Race       string        `xml:"race"`
+	Caste      string        `xml:"caste"`
 	Appeared   int           `xml:"appeared"`
 	BirthYear  int           `xml:"birth_year"`
 	DeathYear  int           `xml:"death_year"`
 	AssocTypes string        `xml:"associated_types"`
 	Entities   []*EntityLink `xml:"entity_link"`
+	Sites      []*SiteLink   `xml:"site_link"`
+	Spheres    []string      `xml:"sphere"`
 }
 
 type EntityLink struct {
+	// Type may be "enemy" ...
 	Type string `xml:"link_type"`
 	ID   int    `xml:"entity_id"`
+}
+
+type SiteLink struct {
+	// Type may be "lair" ...
+	Type string `xml:"link_type"`
+	ID   int    `xml:"site_id"`
 }
