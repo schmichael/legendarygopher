@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Events</title>
+        <link href="/assets/css/main.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1>Legendary Gopher</h1>
+        <h2>Historical Events</h2>
+        {{with $w := .World}}
+        {{range $w.Events}}
+        <h3 id="event-{{ .ID }}" class="proper">
+            <a href="#event-{{ .ID }}">#{{ .ID }}</a>
+            {{ $w.Figure .FigureID }} {{ .State }} in {{ .Year }}
+        </h3>
+        {{end}}
+        {{end}}
+    </body>
+</html>

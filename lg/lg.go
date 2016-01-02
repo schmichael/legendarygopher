@@ -13,6 +13,7 @@ func New(r io.Reader) (*DFWorld, error) {
 	if err := xml.NewDecoder(r).Decode(w); err != nil {
 		return nil, err
 	}
+	w.init()
 	return w, nil
 }
 
@@ -23,12 +24,24 @@ type DFWorld struct {
 	Sites              []*Site              `xml:"sites>site"`
 	Artifacts          []*Artifact          `xml:"artifacts>artifact"`
 	Figures            []*Figure            `xml:"historical_figures>historical_figure"`
+	figidx             map[int]*Figure
 
 	// useless?
 	EntityPopulations []*EntityPopulation `xml:"entity_populations>entity_population"`
 
 	Entities []*Entity `xml:"entities>entity"`
 	Events   []*Event  `xml:"historical_events>historical_event"`
+}
+
+func (w *DFWorld) init() {
+	w.figidx = make(map[int]*Figure, len(w.Figures))
+	for _, f := range w.Figures {
+		w.figidx[f.ID] = f
+	}
+}
+
+func (w *DFWorld) Figure(id int) *Figure {
+	return w.figidx[id]
 }
 
 func (w *DFWorld) String() string {
@@ -93,6 +106,8 @@ type Figure struct {
 	Spheres    []string      `xml:"sphere"`
 }
 
+func (f *Figure) String() string { return f.Name }
+
 type EntityLink struct {
 	// Type may be "enemy" ...
 	Type string `xml:"link_type"`
@@ -112,7 +127,7 @@ type EntityPopulation struct {
 
 type Entity struct {
 	ID   int    `xml:"id"`
-	Name string `xml:"string"`
+	Name string `xml:"name"`
 }
 
 type Event struct {

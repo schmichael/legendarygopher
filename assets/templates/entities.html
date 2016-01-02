@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Entities</title>
+        <link href="/assets/css/main.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1>Legendary Gopher</h1>
+        <h2>Entities</h2>
+        {{range .World.Entities}}
+        {{if .Name }}
+        <h3 id="entity-{{ .ID }}" class="proper">
+            <a href="#entity-{{ .ID }}">#{{ .ID }}</a>
+            {{ .Name }}
+        </h3>
+        {{end}}
+        {{end}}
+    </body>
+</html>

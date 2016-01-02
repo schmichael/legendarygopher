@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/schmichael/legendarygopher/lg"
 )
@@ -16,6 +17,8 @@ try running:
 `
 
 func main() {
+	bind := ""
+	flag.StringVar(&bind, "http", bind, "start web server")
 	flag.Parse()
 	if len(flag.Args()) < 1 {
 		usageExit()
@@ -32,7 +35,12 @@ func main() {
 		os.Exit(11)
 	}
 
-	lgr, err := lg.New(progf)
+	// Let's see how much memory it takes
+	m := runtime.MemStats{}
+	runtime.ReadMemStats(&m)
+	alloc := m.Alloc
+
+	world, err := lg.New(progf)
 	if err != nil {
 		if xmlerr, ok := err.(*xml.SyntaxError); ok && xmlerr.Msg == "invalid UTF-8" {
 			fmt.Fprintf(os.Stderr, invalidUTFError, flag.Arg(0), os.Args[0])
@@ -43,7 +51,17 @@ func main() {
 	}
 	f.Close()
 
-	fmt.Println(lgr)
+	runtime.ReadMemStats(&m)
+	fmt.Fprintf(os.Stderr, "took about %d MB\n", (m.Alloc-alloc)/1024/1024)
+
+	if bind == "" {
+		// Don't start web server; just exit
+		fmt.Println(world)
+		return
+	}
+
+	fmt.Printf("Open http://%s\n", bind)
+	runserver(bind, world)
 }
 
 func usageExit() {

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Home</title>
+        <link href="/assets/css/main.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1>Legendary Gopher</h1>
+        <h2>Artifacts</h2>
+        {{range .World.Artifacts}}
+        <h3 id="artifact-{{ .ID }}" class="proper">
+            <a href="#artifact-{{ .ID }}">#{{ .ID }}</a>
+            {{ .Name }}
+        </h3>
+        <p class="proper">{{ .Item }}</p> 
+        {{end}}
+    </body>
+</html>
