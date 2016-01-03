@@ -47,3 +47,9 @@ go generate
 go build
 ./legendarygopher -http=:6060 some-legends-dump.xml
 ```
+
+### Contributing
+
+Pull requests welcome!
+
+Check out https://github.com/schmichael/legendarygopher/issues for the roadmap.
