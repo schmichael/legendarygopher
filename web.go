@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -26,6 +27,8 @@ type server struct {
 //go:generate go-bindata assets/...
 func runserver(bind string, w *lg.DFWorld) {
 	s := &server{World: w}
+
+	// Serverside rendered html
 	http.HandleFunc("/", wrap(s.listHandler(indext)))
 	http.HandleFunc("/artifacts", wrap(s.listHandler(artifactst)))
 	http.HandleFunc("/entities", wrap(s.listHandler(entitiest)))
@@ -33,6 +36,17 @@ func runserver(bind string, w *lg.DFWorld) {
 	http.HandleFunc("/figures", wrap(s.listHandler(figurest)))
 	http.HandleFunc("/figures/", wrap(s.figureHandler))
 	http.HandleFunc("/assets/", wrap(s.assetHandler))
+
+	// API
+	http.HandleFunc("/api/world", wrap(s.jsonify(w)))
+	http.HandleFunc("/api/artifacts", wrap(s.jsonify(w.Artifacts)))
+	http.HandleFunc("/api/entities", wrap(s.jsonify(w.Entities)))
+	http.HandleFunc("/api/events", wrap(s.jsonify(w.Events)))
+	http.HandleFunc("/api/figures", wrap(s.jsonify(w.Figures)))
+	http.HandleFunc("/api/sites", wrap(s.jsonify(w.Sites)))
+	http.HandleFunc("/api/regions", wrap(s.jsonify(w.Regions)))
+	http.HandleFunc("/api/undergroundregions", wrap(s.jsonify(w.UndergroundRegions)))
+
 	if err := http.ListenAndServe(bind, nil); err != nil {
 		log.Fatal(err)
 	}
@@ -102,4 +116,16 @@ func (s *server) assetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Write(a)
+}
+
+func (s *server) jsonify(collection interface{}) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		if err := json.NewEncoder(w).Encode(collection); err != nil {
+			w.WriteHeader(500)
+			log.Printf("error encoding json for %q %T: %v", r.URL.Path, collection, err)
+			return
+		}
+	}
 }
