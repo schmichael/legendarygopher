@@ -4,6 +4,7 @@ import (
 	"compress/gzip"
 	"flag"
 	"fmt"
+	"math"
 	"os"
 	"runtime"
 	"strings"
@@ -63,7 +64,7 @@ func main() {
 
 	runtime.ReadMemStats(&m)
 	fmt.Fprintf(os.Stderr, "took %s (%d KBps) and approximately %d MB of memory\n",
-		dur, (fi.Size()/1024)/int64(dur/time.Second), (m.Alloc-alloc)/1024/1024)
+		dur, (fi.Size()/1024)/int64(math.Max(1, float64(dur/time.Second))), (m.Alloc-alloc)/1024/1024)
 
 	if bind == "" {
 		// Don't start web server; just exit
