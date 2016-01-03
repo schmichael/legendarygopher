@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ .Figure }}</title>
+        <link href="/assets/css/main.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1>Legendary Gopher</h1>
+        <h2>Historical Figure: {{ .Figure }}</h2>
+        <h3>Events</h3>
+        <ul>
+        {{$f := .Figure}}
+        {{$w := .World}}
+        {{range $e := $w.FigureEvents $f.ID}}
+        <li>{{$w.RenderEvent $e}}</li>
+        {{end}}
+        </ul>
+    </body>
+</html>

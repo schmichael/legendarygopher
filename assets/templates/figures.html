@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Figures</title>
+        <link href="/assets/css/main.css" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1>Legendary Gopher</h1>
+        <h2>Historical Figures</h2>
+        {{range .World.Figures}}
+        <h3 id="figure-{{ .ID }}" class="proper">
+            <a href="#figure-{{ .ID }}">#{{ .ID }}</a>
+            <a href="/figures/{{ .ID }}">{{ . }}</a>
+        </h3>
+        {{end}}
+    </body>
+</html>
