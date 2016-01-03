@@ -13,6 +13,9 @@ Then run it and pass in your legends xml:
 
 ```sh
 legendarygopher some-legends-dump.xml
+
+# gzipped dumps are also supported
+legendarygopher some-legends-dump.xml.gz
 ```
 
 **Once the xml is parsed open http://localhost:6060/ in a browser.**

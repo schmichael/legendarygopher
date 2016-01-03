@@ -1,10 +1,12 @@
 package main
 
 import (
+	"compress/gzip"
 	"flag"
 	"fmt"
 	"os"
 	"runtime"
+	"strings"
 
 	"golang.org/x/text/encoding/charmap"
 
@@ -25,25 +27,33 @@ func main() {
 		os.Exit(11)
 	}
 
-	progf, err := progger(f)
+	rc, err := progger(f)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error getting file size: %v\n", err)
 		os.Exit(11)
 	}
 
+	if strings.HasSuffix(flag.Arg(0), ".gz") {
+		if rc, err = gzip.NewReader(rc); err != nil {
+			fmt.Fprintf(os.Stderr, "error decompressing %q: %v", flag.Arg(0), err)
+			os.Exit(11)
+		}
+	}
+
 	// Convert from cp437 to utf8
-	decr := charmap.CodePage437.NewDecoder().Reader(progf)
+	reader := charmap.CodePage437.NewDecoder().Reader(rc)
 
 	// Let's see how much memory it takes
 	m := runtime.MemStats{}
 	runtime.ReadMemStats(&m)
 	alloc := m.Alloc
 
-	world, err := lg.New(decr)
+	world, err := lg.New(reader)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error reading legends file %q: %v\n", flag.Arg(0), err, err)
 		os.Exit(12)
 	}
+	rc.Close()
 	f.Close()
 
 	runtime.ReadMemStats(&m)
