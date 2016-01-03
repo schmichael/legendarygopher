@@ -21,7 +21,9 @@ Regardless of how you install it, simply run it and pass it your legends xml:
 legendarygopher some-legends-dump.xml
 ```
 
-Once the xml is parsed open http://localhost:6060/ in a browser.
+**Once the xml is parsed open http://localhost:6060/ in a browser.**
+
+*Need an XML file?* [Download a gzipped sample](https://gist.github.com/schmichael/3c8e0a9f0f36cbda9089/raw/32a25692941025f9d2d9688942a45160d5f5a494/region1-00255-10-18-legends.xml.gz)
 
 Turning off the web interface dumps raw text:
 
