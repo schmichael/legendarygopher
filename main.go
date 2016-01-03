@@ -7,6 +7,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"time"
 
 	"golang.org/x/text/encoding/charmap"
 
@@ -27,11 +28,13 @@ func main() {
 		os.Exit(11)
 	}
 
-	rc, err := progger(f)
+	fi, err := f.Stat()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error getting file size: %v\n", err)
 		os.Exit(11)
 	}
+
+	rc := progger(f, fi.Size())
 
 	if strings.HasSuffix(flag.Arg(0), ".gz") {
 		if rc, err = gzip.NewReader(rc); err != nil {
@@ -48,16 +51,19 @@ func main() {
 	runtime.ReadMemStats(&m)
 	alloc := m.Alloc
 
+	start := time.Now()
 	world, err := lg.New(reader)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error reading legends file %q: %v\n", flag.Arg(0), err, err)
 		os.Exit(12)
 	}
+	dur := time.Now().Sub(start)
 	rc.Close()
 	f.Close()
 
 	runtime.ReadMemStats(&m)
-	fmt.Fprintf(os.Stderr, "took about %d MB\n", (m.Alloc-alloc)/1024/1024)
+	fmt.Fprintf(os.Stderr, "took %s (%d KBps) and approximately %d MB of memory\n",
+		dur, (fi.Size()/1024)/int64(dur/time.Second), (m.Alloc-alloc)/1024/1024)
 
 	if bind == "" {
 		// Don't start web server; just exit
