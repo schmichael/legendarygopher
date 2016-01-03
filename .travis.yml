@@ -1,17 +1,17 @@
 language: go
 env:
-- GIMME_OS=linux GIMME_ARCH=amd64
-- GIMME_OS=darwin GIMME_ARCH=amd64
-- GIMME_OS=windows GIMME_ARCH=amd64
+  - GIMME_OS=linux GIMME_ARCH=amd64
+  - GIMME_OS=darwin GIMME_ARCH=amd64
+  - GIMME_OS=windows GIMME_ARCH=amd64
 install:
-- go get -d -v ./...
+  - go get -d -v ./...
 script:
-- go build -v -o legendarygopher-$GIMME_OS-$GIMME_ARCH
+  - go build -v -o legendarygopher-$TRAVIS_TAG-$GIMME_OS-$GIMME_ARCH
 deploy:
   provider: releases
   api_key:
     secure: aRXhym6KP60Wxa35qqNLABrj0mTA0wsj0aaChyozONpLeZIDZ7JXSwbxOxfDebv/x9q6fOhhyNMr9YMt+FdweVay+D4BhglGQU58QT/F3dEQhj9QdPahJliKRIWaffkc37sQwjamntKhkO8EhE6T3PDIaEqWOsUxZhJDXKxpPx8Y4Ae3Tgi/6PApy1D/gHT29L3HFu12oA5qfpwibE8Uk1n+lP9fE8vnw7GlgYLxc8ZzTyLxeN+q5HOUlNiwOomBMKSPZfxV5ZCZZ1P8tfy/jYXMntzoV21mt/zj25rxyZ6/+wEnTQSrCaguBmmi4nfeKFxKp4Kp0CpQRp7qIN4YUbi4TxK7QTwntQsU22r5l+JyP1WVZwKPX0z2ZGOABt37uz7kumOB+h0ffAcKdPpyZjpOFm2oTQ0b+eJMMPCMB/F5q10itiYaQ2IU/ifFXkM3DCucmVAYOHS0M4CiS/fR5hgBkka2TbuVq5i7wz9nTBKEoKDQe2keYcsv4jEhwtt+ifeRBhy5QrPMcwN6kHZZCT5uFCRbBgOAB2LgOGBitLSjRfWVHIjJoHXWmhw0TQX7Rg2ASkcjza3dz82CTUhUa0czXUwqh7aXAewhx0TnstTtnQtEOTmgxIYm0KD5yN/Vk3LJmlQsN9aKl9yRTeBJhEZjkmbYbjEamd5voKQ6xlE=
-  file: legendarygopher-$GIMME_OS-$GIMME_ARCH
+  file: legendarygopher-$TRAVIS_TAG-$GIMME_OS-$GIMME_ARCH
   on:
     repo: schmichael/legendarygopher
     tags: true
