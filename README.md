@@ -21,13 +21,13 @@ Regardless of how you install it, simply run it and pass it your legends xml:
 legendarygopher some-legends-dump.xml
 ```
 
-Or to get a web interface:
+Once the xml is parsed open http://localhost:6060/ in a browser.
+
+Turning off the web interface dumps raw text:
 
 ```sh
-legendarygopher -http=:6060 some-legends-dump.xml
+legendarygopher -http="" some-legends-dump.xml
 ```
-
-Once the xml is parsed open http://localhost:6060/ in a browser.
 
 ## WARNING
 
