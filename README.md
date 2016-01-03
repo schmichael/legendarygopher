@@ -2,10 +2,22 @@
 
 Just playing around with Dwarf Fortress's legends export in Go.
 
+## Usage
+
+The easiest way to get started is to download the latest release binary for
+your platform here:
+
+https://github.com/schmichael/legendarygopher/releases
+
 If you have Go installed you can use it with:
 
 ```sh
 go get github.com/schmichael/legendarygopher
+```
+
+Regardless of how you install it, simply run it and pass it your legends xml:
+
+```sh
 legendarygopher some-legends-dump.xml
 ```
 
