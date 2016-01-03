@@ -1,20 +1,15 @@
 package main
 
 import (
-	"encoding/xml"
 	"flag"
 	"fmt"
 	"os"
 	"runtime"
 
+	"golang.org/x/text/encoding/charmap"
+
 	"github.com/schmichael/legendarygopher/lg"
 )
-
-const invalidUTFError = `invalid UTF-8 characters
-try running:
-    iconv -f utf-8 -t utf-8 -c %q > out.xml
-    %s out.xml
-`
 
 func main() {
 	bind := ""
@@ -29,23 +24,23 @@ func main() {
 		fmt.Fprintf(os.Stderr, "unable to open file %q: %v\n", flag.Arg(0), err)
 		os.Exit(11)
 	}
+
 	progf, err := progger(f)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error getting file size: %v\n", err)
 		os.Exit(11)
 	}
 
+	// Convert from cp437 to utf8
+	decr := charmap.CodePage437.NewDecoder().Reader(progf)
+
 	// Let's see how much memory it takes
 	m := runtime.MemStats{}
 	runtime.ReadMemStats(&m)
 	alloc := m.Alloc
 
-	world, err := lg.New(progf)
+	world, err := lg.New(decr)
 	if err != nil {
-		if xmlerr, ok := err.(*xml.SyntaxError); ok && xmlerr.Msg == "invalid UTF-8" {
-			fmt.Fprintf(os.Stderr, invalidUTFError, flag.Arg(0), os.Args[0])
-			os.Exit(12)
-		}
 		fmt.Fprintf(os.Stderr, "error reading legends file %q: %v\n", flag.Arg(0), err, err)
 		os.Exit(12)
 	}
