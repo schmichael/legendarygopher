@@ -4,13 +4,16 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
-	"io"
 	"strings"
 )
 
-func New(r io.Reader) (*World, error) {
+type Decoder interface {
+	Decode(v interface{}) error
+}
+
+func New(d Decoder) (*World, error) {
 	w := &World{}
-	if err := xml.NewDecoder(r).Decode(w); err != nil {
+	if err := d.Decode(w); err != nil {
 		return nil, err
 	}
 	w.init()

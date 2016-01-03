@@ -2,6 +2,8 @@ package main
 
 import (
 	"compress/gzip"
+	"encoding/json"
+	"encoding/xml"
 	"flag"
 	"fmt"
 	"math"
@@ -52,8 +54,13 @@ func main() {
 	runtime.ReadMemStats(&m)
 	alloc := m.Alloc
 
+	var dec lg.Decoder = xml.NewDecoder(reader)
+	if strings.HasSuffix(flag.Arg(0), ".json") || strings.HasSuffix(flag.Arg(0), ".json.gz") {
+		dec = json.NewDecoder(reader)
+	}
+
 	start := time.Now()
-	world, err := lg.New(reader)
+	world, err := lg.New(dec)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error reading legends file %q: %v\n", flag.Arg(0), err, err)
 		os.Exit(12)
