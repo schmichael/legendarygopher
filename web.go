@@ -21,11 +21,11 @@ var (
 )
 
 type server struct {
-	World *lg.DFWorld
+	World *lg.World
 }
 
 //go:generate go-bindata assets/...
-func runserver(bind string, w *lg.DFWorld) {
+func runserver(bind string, w *lg.World) {
 	s := &server{World: w}
 
 	// Serverside rendered html
@@ -86,7 +86,7 @@ func (s *server) figureHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	context := struct {
 		Figure *lg.Figure
-		World  *lg.DFWorld
+		World  *lg.World
 	}{fig, s.World}
 	if err := figuret.Execute(w, context); err != nil {
 		log.Printf("error executing template %s: %v", figuret.Name(), err)

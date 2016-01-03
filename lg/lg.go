@@ -8,8 +8,8 @@ import (
 	"strings"
 )
 
-func New(r io.Reader) (*DFWorld, error) {
-	w := &DFWorld{}
+func New(r io.Reader) (*World, error) {
+	w := &World{}
 	if err := xml.NewDecoder(r).Decode(w); err != nil {
 		return nil, err
 	}
@@ -17,7 +17,7 @@ func New(r io.Reader) (*DFWorld, error) {
 	return w, nil
 }
 
-type DFWorld struct {
+type World struct {
 	XMLName            xml.Name             `xml:"df_world" json:"-"`
 	Regions            []*Region            `xml:"regions>region" json:"regions"`
 	UndergroundRegions []*UndergroundRegion `xml:"underground_regions>underground_region" json:"underground_regions"`
@@ -34,7 +34,7 @@ type DFWorld struct {
 	Events   []*Event  `xml:"historical_events>historical_event" json:"historical_events"`
 }
 
-func (w *DFWorld) init() {
+func (w *World) init() {
 	w.siteidx = make(map[int]*Site, len(w.Sites))
 	for _, s := range w.Sites {
 		w.siteidx[s.ID] = s
@@ -46,15 +46,15 @@ func (w *DFWorld) init() {
 	}
 }
 
-func (w *DFWorld) Figure(id int) *Figure {
+func (w *World) Figure(id int) *Figure {
 	return w.figidx[id]
 }
 
-func (w *DFWorld) Site(id int) *Site {
+func (w *World) Site(id int) *Site {
 	return w.siteidx[id]
 }
 
-func (w *DFWorld) FigureEvents(id int) <-chan *Event {
+func (w *World) FigureEvents(id int) <-chan *Event {
 	out := make(chan *Event, 100)
 	go func() {
 		defer close(out)
@@ -67,7 +67,7 @@ func (w *DFWorld) FigureEvents(id int) <-chan *Event {
 	return out
 }
 
-func (w *DFWorld) RenderEvent(e *Event) string {
+func (w *World) RenderEvent(e *Event) string {
 	switch e.Type {
 	case "destroyed site":
 		return fmt.Sprintf("Site %d for Civ %d destroyed by Civ %d", e.SiteID, e.DefenderCivID, e.AttackerCivID)
@@ -86,7 +86,7 @@ func (w *DFWorld) RenderEvent(e *Event) string {
 	}
 }
 
-func (w *DFWorld) String() string {
+func (w *World) String() string {
 	buf := bytes.NewBuffer(nil)
 	buf.WriteString("Regions\n")
 	for _, r := range w.Regions {
