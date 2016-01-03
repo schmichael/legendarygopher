@@ -9,13 +9,7 @@ your platform here:
 
 https://github.com/schmichael/legendarygopher/releases
 
-If you have Go installed you can use it with:
-
-```sh
-go get github.com/schmichael/legendarygopher
-```
-
-Regardless of how you install it, simply run it and pass it your legends xml:
+Then run it and pass in your legends xml:
 
 ```sh
 legendarygopher some-legends-dump.xml
