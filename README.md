@@ -27,6 +27,8 @@ Or to get a web interface:
 legendarygopher -http=:6060 some-legends-dump.xml
 ```
 
+Once the xml is parsed open http://localhost:6060/ in a browser.
+
 ## WARNING
 
 Everything, including the package/repo name/location is subject to change
