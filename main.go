@@ -1,6 +1,7 @@
 package main
 
 import (
+	"compress/bzip2"
 	"compress/gzip"
 	"encoding/json"
 	"encoding/xml"
@@ -39,30 +40,48 @@ func main() {
 
 	rc := progger(f, fi.Size())
 
-	if strings.HasSuffix(flag.Arg(0), ".gz") {
-		if rc, err = gzip.NewReader(rc); err != nil {
-			fmt.Fprintf(os.Stderr, "error decompressing %q: %v", flag.Arg(0), err)
-			os.Exit(11)
+	fnparts := strings.Split(flag.Arg(0), ".")
+	var dec lg.Decoder
+
+	// Wrap readers until we find a decoder
+	for len(fnparts) > 0 && dec == nil {
+		switch fnparts[len(fnparts)-1] {
+		case "gz":
+			if rc, err = gzip.NewReader(rc); err != nil {
+				fmt.Fprintf(os.Stderr, "error decompressing %q: %v\n", flag.Arg(0), err)
+				os.Exit(11)
+			}
+			// pop .gz extension and continue
+			fnparts = fnparts[:len(fnparts)-1]
+
+		case "bz2":
+			rc = &closer{bzip2.NewReader(rc), rc}
+			// pop .bz2 extension and continue
+			fnparts = fnparts[:len(fnparts)-1]
+
+		case "xml":
+			// Convert from cp437 to utf8 and decode xml
+			dec = xml.NewDecoder(charmap.CodePage437.NewDecoder().Reader(rc))
+
+		case "json":
+			dec = json.NewDecoder(rc)
 		}
 	}
 
-	// Convert from cp437 to utf8
-	reader := charmap.CodePage437.NewDecoder().Reader(rc)
+	if dec == nil {
+		fmt.Fprintf(os.Stderr, "unknown extension %q in %q\n", fnparts[len(fnparts)-1])
+		os.Exit(11)
+	}
 
 	// Let's see how much memory it takes
 	m := runtime.MemStats{}
 	runtime.ReadMemStats(&m)
 	alloc := m.Alloc
 
-	var dec lg.Decoder = xml.NewDecoder(reader)
-	if strings.HasSuffix(flag.Arg(0), ".json") || strings.HasSuffix(flag.Arg(0), ".json.gz") {
-		dec = json.NewDecoder(reader)
-	}
-
 	start := time.Now()
 	world, err := lg.New(dec)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error reading legends file %q: %v\n", flag.Arg(0), err, err)
+		fmt.Fprintf(os.Stderr, "error reading legends file %q: %v\n", flag.Arg(0), err)
 		os.Exit(12)
 	}
 	dur := time.Now().Sub(start)
