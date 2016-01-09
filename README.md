@@ -17,7 +17,7 @@ Then run it and pass in your legends xml:
 legendarygopher some-legends-dump.xml
 ```
 
-Once the xml is parsed open http://localhost:6060/ in a browser.
+Once the xml is parsed open http://localhost:6565/ in a browser.
 
 ## Features
 
@@ -35,7 +35,7 @@ If you change templates you must install go-bindata and run go generate:
 go get -u github.com/jteeuwen/go-bindata/...
 go generate
 go build
-./legendarygopher -http=:6060 some-legends-dump.xml
+./legendarygopher -http=:6565 some-legends-dump.xml
 ```
 
 ### Contributing

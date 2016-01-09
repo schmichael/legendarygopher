@@ -19,7 +19,7 @@ import (
 )
 
 func main() {
-	bind := "localhost:6060"
+	bind := "localhost:6565"
 	flag.StringVar(&bind, "http", bind, "start web server")
 	flag.Parse()
 	if len(flag.Args()) < 1 {
