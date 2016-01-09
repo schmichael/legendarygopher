@@ -1,6 +1,6 @@
 # Legendary Gopher
 
-Just playing around with Dwarf Fortress's legends export in Go.
+Simple web viewer for Dwarf Fortress 42 Legends XML files.
 
 ## Usage
 
@@ -9,22 +9,15 @@ your platform here:
 
 https://github.com/schmichael/legendarygopher/releases
 
+If you're on Windows you'll have to add a `.exe` extension. See issue #15.
+
 Then run it and pass in your legends xml:
 
 ```sh
 legendarygopher some-legends-dump.xml
-
-# gzipped dumps are also supported
-legendarygopher some-legends-dump.xml.gz
 ```
 
-**Once the xml is parsed open http://localhost:6060/ in a browser.**
-
-Turning off the web interface dumps raw text:
-
-```sh
-legendarygopher -http="" some-legends-dump.xml
-```
+Once the xml is parsed open http://localhost:6060/ in a browser.
 
 ## WARNING
 
@@ -33,6 +26,14 @@ without warning. **If you want to use this code your best bet is probably just
 to copy and paste it into your own projet.**
 
 *Go nuts!*
+
+## Features
+
+* gzipped (`.xml.gz`) and bzipped (`.xml.bz2`) files
+* Code Page 437 encoding handling
+* JSON HTTP API (for example `/api/world`)
+* JSON support (save `/api/world` and pass it in instead of xml)
+* Text dump mode (with `-http=""`)
 
 ## Development
 
