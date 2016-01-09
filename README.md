@@ -19,14 +19,6 @@ legendarygopher some-legends-dump.xml
 
 Once the xml is parsed open http://localhost:6060/ in a browser.
 
-## WARNING
-
-Everything, including the package/repo name/location is subject to change
-without warning. **If you want to use this code your best bet is probably just
-to copy and paste it into your own projet.**
-
-*Go nuts!*
-
 ## Features
 
 * gzipped (`.xml.gz`) and bzipped (`.xml.bz2`) files
@@ -51,3 +43,11 @@ go build
 Pull requests welcome!
 
 Check out https://github.com/schmichael/legendarygopher/issues for the roadmap.
+
+### WARNING
+
+Everything, including the package/repo name/location is subject to change
+without warning. **If you want to use this code your best bet is probably just
+to copy and paste it into your own projet.**
+
+*Go nuts!*
